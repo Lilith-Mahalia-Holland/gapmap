@@ -1,0 +1,52 @@
+[project]
+name = "gapmap"
+version = "0.1.0"
+description = "CLI tool for mapping thematic coverage gaps via LDA and similarity"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.4.2",
+    "diskcache>=5.6.3",
+    "huggingface-hub>=1.28.0",
+    "matplotlib>=3.11.1",
+    "pillow>=10.4.0",
+    "psutil>=7.2.2",
+    "pydantic>=2.13.4",
+    "pymupdf>=1.28.2",
+    "tqdm>=4.70.0",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
+    "pytorch-triton-rocm>=3.5.1 ; sys_platform == 'linux'",
+    "triton-rocm>=3.6.0 ; sys_platform == 'linux'",
+    "transformers[torch]>=5.16.1",
+    "triton>=3.8.0",
+    "opencv-python>=5.0.0.93",
+]
+
+[project.scripts]
+gapmap = "gapmap.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+torchvision = [
+  { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+triton = [
+  { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+pytorch-triton-rocm = [
+  { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+triton-rocm = [
+  { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm7.1"
+explicit = true
