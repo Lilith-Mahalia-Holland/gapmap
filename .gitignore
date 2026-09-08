@@ -82,3 +82,6 @@ venv.bak/
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 cmake-build-*/
+
+# Project files
+gapmap_storage/
