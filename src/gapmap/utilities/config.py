@@ -1,6 +1,10 @@
+from __future__ import annotations
+
+
 from pathlib import Path
-from pydantic import DirectoryPath
+from pydantic import DirectoryPath, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import torch
 
 def find_project_root(current_path: Path) -> Path:
     for parent in current_path.parents:
@@ -10,8 +14,9 @@ def find_project_root(current_path: Path) -> Path:
 
 PROJECT_ROOT = find_project_root(Path(__file__).resolve())
 
-class StorageSettings(BaseSettings):
+class ToolSettings(BaseSettings):
     STORAGE_PATH: DirectoryPath
+    TRY_DEVICE: str = "cpu"
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",
@@ -31,5 +36,13 @@ class StorageSettings(BaseSettings):
     def processed_dir(self) -> Path:
         return self.STORAGE_PATH / "processed"
 
+    @computed_field
+    @property
+    def device(self) -> str:
+        if self.TRY_DEVICE != "cpu" and torch.cuda.is_available():
+            return "cuda"
 
-settings = StorageSettings()
+        return "cpu"
+
+
+settings = ToolSettings()

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
+
 from huggingface_hub import hf_hub_download
-from pathlib import Path
 from os.path import isfile
 from tqdm import tqdm
 from config import settings
@@ -11,7 +13,7 @@ download_dict = {
     "allenai/scibert_scivocab_uncased": ["pytorch_model.bin", "config.json", "vocab.txt"]
 }
 
-base_dir = Path(settings.STORAGE_PATH) / "models"
+base_dir = settings.models_dir
 
 for repo, file_list in tqdm(download_dict.items()):
     repo_folder_name = repo.split("/")[-1].replace("-", "_").strip()
