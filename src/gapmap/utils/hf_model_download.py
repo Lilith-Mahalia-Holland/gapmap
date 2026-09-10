@@ -4,7 +4,7 @@ from __future__ import annotations
 from huggingface_hub import hf_hub_download
 from os.path import isfile
 from tqdm import tqdm
-from config import settings
+from gapmap.utils.config import settings
 
 
 download_dict = {

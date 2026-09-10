@@ -6,6 +6,7 @@ from pydantic import DirectoryPath, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import torch
 
+
 def find_project_root(current_path: Path) -> Path:
     for parent in current_path.parents:
         if (parent / "pyproject.toml").exists() or (parent / "src").exists():
