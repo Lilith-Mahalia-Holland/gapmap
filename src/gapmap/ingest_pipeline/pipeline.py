@@ -8,11 +8,12 @@ from transformers import AutoImageProcessor, AutoModelForObjectDetection
 from gapmap.utils.config import settings
 from gapmap.ingest_pipeline.schema import PageLayoutData
 from gapmap.ingest_pipeline.core.result_handler import process_results
+from tqdm import tqdm
+# from gapmap.ingest_pipeline.utils.debug import debug_draw_bbox, debug_pdf_box
 
 
-device = settings.device
 model_path = settings.models_dir / "PP_DocLayoutV3_safetensors"
-model = AutoModelForObjectDetection.from_pretrained(model_path, local_files_only=True).to(device)
+model = AutoModelForObjectDetection.from_pretrained(model_path, local_files_only=True, device_map=str(settings.device))
 image_processor = AutoImageProcessor.from_pretrained(model_path, local_files_only=True)
 
 
@@ -21,7 +22,7 @@ def process_doc(file_path: Path):
         for page in doc:
             pix = page.get_pixmap(dpi=96)
             page_image = pix.pil_image()
-            inputs = image_processor(images=page_image, return_tensors="pt").to(device)
+            inputs = image_processor(images=page_image, return_tensors="pt").to(model.device)
 
             with torch.no_grad():
                 outputs = model(**inputs)
@@ -33,11 +34,11 @@ def process_doc(file_path: Path):
                 raw_results=results,
             )
 
-            process_results(layout)
+            process_results(layout, model)
 
 
 
-for file_path in settings.ingest_dir.glob("**/*.pdf"):
+for file_path in tqdm(settings.ingest_dir.glob("**/*.pdf")):
     process_doc(file_path)
 
 

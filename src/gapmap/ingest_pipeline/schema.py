@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 import pymupdf
-from typing import Any, List, Dict
+from typing import List, Dict
 import torch
 import numpy as np
+from enum import StrEnum
 
 
 strict_config = ConfigDict(extra='forbid', strict=True, arbitrary_types_allowed=True)
@@ -57,6 +58,36 @@ class CleanedDocument(BaseModel):
     abstract: str = Field(...)
     updated: str = Field(...)
     published: str = Field(...)
+
+
+
+class ElementLabel(StrEnum):
+    ABSTRACT = "abstract"
+    ALGORITHM = "algorithm"
+    ASIDE_TEXT = "aside_text"
+    CHART = "chart"
+    CONTENT = "content"
+    FORMULA = "formula"
+    DOC_TITLE = "doc_title"
+    FIGURE_TITLE = "figure_title"
+    FOOTER = "footer"
+    FOOTNOTE = "footnote"
+    FORMULA_NUMBER = "formula_number"
+    HEADER = "header"
+    IMAGE = "image"
+    NUMBER = "number"
+    PARAGRAPH_TITLE = "paragraph_title"
+    REFERENCE = "reference"
+    REFERENCE_CONTENT = "reference_content"
+    SEAL = "seal"
+    TABLE = "table"
+    TEXT = "text"
+    VISION_FOOTNOTE = "vision_footnote"
+
+VISUAL_ELEMENTS = {ElementLabel.IMAGE, ElementLabel.CHART, ElementLabel.SEAL}
+MATH_ELEMENTS = {ElementLabel.ALGORITHM}
+TABLE_ELEMENTS = {ElementLabel.TABLE}
+
 
 # result schema using open ragbench layout
 # https://github.com/vectara/open-rag-bench
