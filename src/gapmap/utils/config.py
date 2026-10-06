@@ -40,7 +40,7 @@ class ToolSettings(BaseSettings):
     @computed_field
     @property
     def device(self) -> str:
-        if self.TryDevice == "cpu":
+        if self.TRY_DEVICE == "cpu":
             return "cpu"
 
         if torch.accelerator.is_available():
