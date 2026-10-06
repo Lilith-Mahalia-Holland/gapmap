@@ -40,8 +40,11 @@ class ToolSettings(BaseSettings):
     @computed_field
     @property
     def device(self) -> str:
-        if self.TRY_DEVICE != "cpu" and torch.cuda.is_available():
-            return "cuda"
+        if self.TryDevice == "cpu":
+            return "cpu"
+
+        if torch.accelerator.is_available():
+            return torch.accelerator.current_accelerator().type
 
         return "cpu"
 
